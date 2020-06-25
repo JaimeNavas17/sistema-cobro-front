@@ -62,4 +62,4 @@ function referMar() {
     location.href = location.pathname.substr(0, 20) + "/marca.html";
 }
 
-var ApiRestUrl = "http://sistema-cobros-back.herokuapp.com/sistemaCobros/rest-resources/"
+var ApiRestUrl = "https://sistema-cobros-back.herokuapp.com/sistemaCobros/rest-resources/"
