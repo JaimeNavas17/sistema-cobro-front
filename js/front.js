@@ -47,26 +47,19 @@ Cookies.set('active', 'true');
 
 
 function referProd() {
-    location.href = location.pathname.substr(0, 18) + "/productos.html";
+    location.href = location.pathname.substr(0, 20) + "/productos.html";
 }
 
 function referCat() {
-    location.href = location.pathname.substr(0, 18) + "/categorias.html";
+    location.href = location.pathname.substr(0, 20) + "/categorias.html";
 }
 
 function referOrd() {
-    location.href = location.pathname.substr(0, 18) + "/ordenes.html";
+    location.href = location.pathname.substr(0, 20) + "/ordenes.html";
 }
 
 function referMar() {
-    location.href = location.pathname.substr(0, 18) + "/marca.html";
+    location.href = location.pathname.substr(0, 20) + "/marca.html";
 }
 
-var ApiRestUrl = "http://localhost:8080/sistema-cobro/rest-resources/"
-
-
-// $(document).ready(function(){
-//     $('[data-toggle="tooltip"]').tooltip();
-//   });
-
-  
+var ApiRestUrl = "http://sistema-cobros-back.herokuapp.com/sistemaCobros/rest-resources/"
