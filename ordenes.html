@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>TPI - Sistema de cobros</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="all,follow">
+    <!-- Bootstrap CSS-->
+    <link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.min.css">
+    <!-- Font Awesome CSS-->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
+        integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+    <!-- Google fonts - Popppins for copy-->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,800">
+    <!-- orion icons-->
+    <link rel="stylesheet" href="css/orionicons.css">
+    <!-- theme stylesheet-->
+    <link rel="stylesheet" href="css/style.default.css" id="theme-stylesheet">
+    <!-- Custom stylesheet - for your changes-->
+    <link rel="stylesheet" href="css/custom.css">
+    <!-- Favicon-->
+    <link rel="shortcut icon" href="img/fav.png">
+    <style>
+        .inp-cantidad {
+            width: 3em;
+            margin: 0;
+            border: none;
+            text-align: center;
+        }
+
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- navbar-->
+    <header class="header">
+        <nav class="navbar navbar-expand-lg px-4 py-2 bg-white shadow"><a href="#"
+                class="sidebar-toggler text-gray-500 mr-4 mr-lg-5 lead"><i class="fas fa-align-left"></i></a><a
+                href="index.html" class="navbar-brand font-weight-bold text-uppercase text-base">TPI</a>
+        </nav>
+    </header>
+    <div class="d-flex align-items-stretch" style="height: 100vh;">
+
+        <!-- Side navbar -->
+        <div id="sidebar" class="sidebar py-3">
+            <div class="text-gray-400 text-uppercase px-3 px-lg-4 py-4 font-weight-bold small headings-font-family">MENÚ
+            </div>
+            <ul class="sidebar-menu list-unstyled">
+                <li class="sidebar-list-item">
+                    <a href="index.html" class="sidebar-link text-muted">
+                        <i class="o-home-1 mr-3 text-gray"></i><span>Home</span>
+                    </a>
+                </li>
+                <li class="sidebar-list-item">
+                    <a href="categorias.html" class="sidebar-link text-muted">
+                        <i class="o-wireframe-1 mr-3 text-gray"></i><span>Categorias</span>
+                    </a>
+                </li>
+                <li class="sidebar-list-item">
+                    <a href="productos.html" class="sidebar-link text-muted">
+                        <i class="o-table-content-1 mr-3 text-gray"></i><span>Productos</span>
+                    </a>
+                </li>
+                <li class="sidebar-list-item">
+                    <a href="#" class="sidebar-link text-muted active">
+                        <i class="o-survey-1 mr-3 text-gray"></i><span>Ordenes</span>
+                    </a>
+                </li>
+                <li class="sidebar-list-item">
+                    <a href="marca.html" class="sidebar-link text-muted">
+                        <i class="fas fa-list-ul mr-3 text-gray"></i><span>Marca</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <!-- Fin del Side navbar -->
+
+        <!-- Cuerpo a escribir y comienza dominio de vue -->
+        <div id="domVue" class="page-holder w-100 d-flex flex-wrap">
+            <div class="container-fluid px-xl-5">
+
+                <div style="margin-top: 2rem;">
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="text-uppercase mb-0" style="display: inline-block;">Ordenes</h6>
+                            <button type="button" class="btn btn-success" style="float: right;" data-toggle="modal"
+                                data-target="#agregarProducto"><i class="fa fa-plus" aria-hidden="true"></i></button>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group position-relative mb-0">
+                                <button type="submit" style="top: -3px; left: 0;"
+                                    class="position-absolute bg-white border-0 p-0"><i
+                                        class="o-search-magnify-1 text-gray text-lg"></i></button>
+                                <input type="search" placeholder="Buscar orden..."
+                                    class="form-control form-control-sm border-0 no-shadow pl-4"
+                                    v-model="searchDisplay">
+                            </div>
+                            <table class="table card-text table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Nombre</th>
+                                        <th>Fecha</th>
+                                        <th>Total</th>
+                                        <th>Descripción</th>
+                                        <th>Operaciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(ord,index) in ordenes" v-show="filtro(index)"
+                                        v-on:click="ordSelected=ord" v-on:dblClick='doubleClick'
+                                        style="cursor: pointer;user-select: none;">
+                                        <th>{{primerosDigitos(ord.idOrden)}}</th>
+                                        <td>{{ord.nombreCliente}}</td>
+                                        <td>{{ord.fechaOrd}}</td>
+                                        <td>{{ord.totalOrden}}</td>
+                                        <td>{{ord.observacionesOrden}}</td>
+                                        <td>
+                                            <button type="button" class="btn btn-danger" data-toggle="modal"
+                                                data-target="#eliminarProducto" v-on:click="ordSelected=ord"><i
+                                                    class="fa fa-trash" aria-hidden="true"></i></button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#detalleProducto" hidden
+                    id="btnDetOrden"><i class="fa fa-trash" aria-hidden="true"></i></button>
+            </div>
+            <!-- Fin del Cuerpo a escribir -->
+
+
+            <!-- Inicio del Modal agregar orden -->
+            <div class="modal fade bd-example-modal-lg" id="agregarProducto" tabindex="-1" role="dialog"
+                aria-labelledby="agregarProducto" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle">Nueva Orden</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="card-body">
+                                <div class="form-group row">
+                                    <label class="col-md-3 form-control-label">Nombre</label>
+                                    <div class="col-md-9">
+                                        <input type="text" class="form-control" v-model="orden.nombreCliente">
+                                    </div>
+                                </div>
+                                <div class="line"></div>
+                                <div>
+                                    <div class="form-group position-relative mb-0">
+                                        <button type="submit" style="top: -3px; left: 0;"
+                                            class="position-absolute bg-white border-0 p-0"><i
+                                                class="o-search-magnify-1 text-gray text-lg"></i></button>
+                                        <input type="search" placeholder="Buscar producto..."
+                                            class="form-control form-control-sm border-0 no-shadow pl-4"
+                                            v-model="prodSearch">
+                                    </div>
+                                    <div style="overflow-y: scroll;max-height: 500px;">
+                                        <table class="table card-text table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>UPC</th>
+                                                    <th>Nombre</th>
+                                                    <th>Marca</th>
+                                                    <th>Categoria</th>
+                                                    <th>Precio</th>
+                                                    <th>Stock</th>
+                                                    <th>Cantidad</th>
+                                                    <th>Descuento</th>
+                                                    <th>Sub-Total</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr v-for="(prod,index) in productos" v-show="filtroProd(index)">
+                                                    <th>{{prod.upc}}</th>
+                                                    <td>{{prod.nombreProd}}</td>
+                                                    <td>{{converterIdMar2MarName(prod.idMarca)}}</td>
+                                                    <td>{{converterIdCat2CatName(prod.idCategoria)}}</td>
+                                                    <td>{{dosDecimalesProd(prod.precioUnit)}}</td>
+                                                    <td>{{prod.stockProd}}</td>
+                                                    <td style="padding: 0;">
+                                                        <div class="input-group" style="transform: scale(0.9);">
+                                                            <div class="input-group-prepend"
+                                                                style="cursor: pointer;user-select: none;"><span
+                                                                    class="input-group-text"
+                                                                    @click="decProducto(prod)">-</span></div>
+                                                            <input type="text"
+                                                                style="padding: 0;max-width: 3rem; text-align: center;"
+                                                                :min="0" :max="prod.stockProd"
+                                                                v-model.lazy.number="prod.cantidad" step="1"
+                                                                @input="change(prod,$event)"
+                                                                @change="change(prod,$event)" class="form-control">
+                                                            <div class="input-group-append"
+                                                                style="cursor: pointer;user-select: none;"><span
+                                                                    class="input-group-text"
+                                                                    @click="incProducto(prod)">+</span></div>
+                                                        </div>
+                                                    </td>
+                                                    <td><input type="text"
+                                                            style="padding: 0;max-width: 3rem; text-align: center;"
+                                                            min="0" max="100" v-model.lazy.number="prod.descuento"
+                                                            step="1" class="form-control">
+                                                    </td>
+                                                    <td>
+                                                        {{((prod.precioUnit*prod.cantidad)-(prod.precioUnit*prod.cantidad*(prod.descuento/100))).toFixed(2)}}
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <h6 style="margin-top: 1rem;font-weight: 900;text-align: center;">Total:
+                                        {{orden.totalOrden.toFixed(2)}}</h6>
+                                </div>
+                                <div class="line"></div>
+                                <div class="form-group row">
+                                    <label class="col-md-3 form-control-label">Descripción</label>
+                                    <div class="col-md-9">
+                                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"
+                                            v-model="orden.observacionesOrden"></textarea>
+                                    </div>
+                                </div>
+                                <div class="line"></div>
+                                <div class="form-group row">
+                                    <label class="col-md-3 form-control-label">Método de pago</label>
+                                    <div class="col-md-9">
+                                        <input list="metPago" class="form-control" v-model="metPagoSelected">
+                                        <datalist id="metPago">
+                                            <option v-for="(met,index) in metPago" :id="index"
+                                                :data-value="met.idMetodoPago">
+                                                {{converterIdMetPago2MetName(met.idMetodoPago)}}
+                                            </option>
+                                        </datalist>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                            <button type="button" class="btn btn-primary" @Click="createRegistro"
+                                data-dismiss="modal">Guardar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Fin del Modal agregar orden -->
+
+            <!-- Inicio del Modal eliminar orden -->
+            <div class="modal fade" id="eliminarProducto" tabindex="-1" role="dialog" aria-labelledby="agregarProducto"
+                aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle">Eliminar Orden</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <h6 style="font-weight: 400;text-align: center;">¿Está seguro que quiere eliminar la orden
+                                "{{ordSelected.idOrden}}"?</h6>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                            <button type="button" class="btn btn-danger" @Click="removeRegistro()">Eliminar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Fin del Modal eliminar orden -->
+
+            <!-- Inicio del Modal detalle orden -->
+            <div class="modal fade bd-example-modal-lg" id="detalleProducto" tabindex="-1" role="dialog"
+                aria-labelledby="detalleProducto" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle">Detalle Orden</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="card-body">
+                                <div class="form-group row">
+                                    <label class="col-md-3 form-control-label">ID Orden</label>
+                                    <div class="col-md-9">
+                                        <input type="text" class="form-control" readonly v-model="ordSelected.idOrden">
+                                    </div>
+                                </div>
+                                <div class="line"></div>
+                                <div class="form-group row">
+                                    <label class="col-md-3 form-control-label">Nombre</label>
+                                    <div class="col-md-9">
+                                        <input type="text" class="form-control" readonly
+                                            v-model="ordSelected.nombreCliente">
+                                    </div>
+                                </div>
+                                <div class="line"></div>
+                                <div style="overflow-y: scroll;max-height: 500px;">
+                                    <table class="table card-text table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>UPC</th>
+                                                <th>Nombre</th>
+                                                <th>Marca</th>
+                                                <th>Categoria</th>
+                                                <th>Precio</th>
+                                                <th>Cantidad</th>
+                                                <th>Descuento</th>
+                                                <th>Sub-Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="(prod,index) in ordSelected.productos" style="cursor: pointer;">
+                                                <th>{{prod.upc}}</th>
+                                                <td>{{prod.nombreProd}}</td>
+                                                <td>{{converterIdMar2MarName(prod.idMarca)}}</td>
+                                                <td>{{converterIdCat2CatName(prod.idCategoria)}}</td>
+                                                <td>{{prod.precioUnit}}</td>
+                                                <td>{{prod.cantidadProd}}</td>
+                                                <td>{{prod.descuento}}</td>
+                                                <td>{{((prod.cantidadProd*prod.precioUnit) - (prod.cantidadProd*prod.precioUnit*(prod.descuento/100))).toFixed(2)}}
+                                                </td>
+
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <h6 style="margin-top: 1rem;font-weight: 900;text-align: center;">Total:
+                                    {{ordSelected.totalOrden}}</h6>
+                                <div class="line"></div>
+                                <div class="form-group row">
+                                    <label class="col-md-3 form-control-label">Descripción</label>
+                                    <div class="col-md-9">
+                                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"
+                                            readonly v-model="ordSelected.observacionesOrden"></textarea>
+                                    </div>
+                                </div>
+                                <div class="line"></div>
+                                <div class="form-group row">
+                                    <label class="col-md-3 form-control-label">Método Pago</label>
+                                    <div class="col-md-9">
+                                        <input type="text" class="form-control" readonly
+                                            v-model="ordSelected.nombrePago">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                            <button type="button" class="btn btn-primary">Guardar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Fin del Modal detalle orden -->
+
+            <footer class="footer-margin footer bg-white shadow align-self-end py-3 px-xl-5 w-100">
+                <div class="container-fluid">
+                    <div class="row text-primary" style="justify-content: center;">
+                        <p class="mb-2 mb-md-0">Técnicas de Programación en Internet</p>
+                    </div>
+                </div>
+            </footer>
+        </div>
+        <!-- Fin del dominio de vue -->
+
+    </div>
+    <!-- JavaScript files-->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/popper.js/umd/popper.min.js"> </script>
+    <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+    <script src="vendor/jquery.cookie/jquery.cookie.js"> </script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+    <script src="js/front.js"></script>
+    <script src="js/vue.js "></script>
+    <script src="js/axios.min.js "></script>
+    <script src="js/orden.js"></script>
+</body>
+
+</html>
